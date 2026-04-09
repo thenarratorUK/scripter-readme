@@ -30,6 +30,11 @@ This tool is hosted at [**https://scripter.streamlit.app**](https://scripter.str
 
 - Type whatever you would like into this box. It will be prepended to most of the files you download at the end of the process (excluding the speaker colors file) and is required for the load saved progress function to work (only available up to four hours from last use)
 - Do not type something overly simple - if someone else types exactly the same thing, they will be able to access what you are working on. 
+- Choose a **Mode** before continuing. The app now supports:
+  - **Updated** (recommended default): fully manual attribution in Step 2 with context support.
+  - **Semi-Automated**: candidate speakers are suggested by the local model and you confirm/select.
+  - **Legacy**: only use this if you already have an existing `quotes.txt` workflow and are continuing that same process. If you are starting fresh, use **Updated**.
+  - **Experimental mode**: same model pipeline as Semi-Automated, but with high-confidence auto-selection (see below).
 
 ---
 
@@ -66,6 +71,23 @@ This tool is hosted at [**https://scripter.streamlit.app**](https://scripter.str
 ---
 
 #### 3. Step 2 — Process Unknown Speakers
+
+Step 2 behaviour depends on the selected mode:
+
+- **Updated path**
+  - Any dialogue lines without a recognised speaker are labelled **“Unknown.”**
+  - You review and assign speakers line-by-line.
+
+- **Semi-Automated path**
+  - The model proposes likely speakers for each unresolved line.
+  - Warning shown in-app: **“Automatic identification of speakers takes 1-5 seconds per line, please be patient if nothing appears to be happening.”**
+  - You can click a suggestion or enter a speaker manually.
+
+- **Experimental mode path (in progress)**
+  - Uses the same candidate generation/ranking as Semi-Automated.
+  - If top confidence is **99.95%+**, the top candidate is automatically selected and the app immediately moves to the next unresolved line.
+  - If subsequent lines are also **99.95%+**, they are auto-attributed in sequence, reducing manual workload by approximately **50%**.
+  - Warning shown in-app: **“Automatic identification and attribution of speakers takes 1-5 seconds per line and if there are multiple automatically attributable speakers in a row, this can add up to minutes. If everything appears to have frozen please wait!”**
 
 - Any dialogue lines without a recognised speaker are labelled **“Unknown.”** in the quotes.txt file
 - The app guides you line-by-line to correct them.
@@ -108,23 +130,30 @@ This tool is hosted at [**https://scripter.streamlit.app**](https://scripter.str
   - Character Summary: Displays how many lines each character has, in order of appearance. This can be useful for planning and for the creation of a voice reference
   - Speaker Ranking: This displays the same information but in the order of how many lines each character has. This is to allow you to prioritise developing individual voices for the most frequent characters. Characters with a single line of dialogue are **excluded**. 
   - First Substantial Lines: This displays the first line(s) for each character, in order of appearance, for those narrators that like to use the first line in a voice reference. This **includes** characters with a single line of dialogue. 
-- Below the html preview, five (or six, in rare circumstances) buttons will appear:
-  - &#x20;**Download HTML file** lets you download the HTML, either for reading from directly or for converting to PDF, as per individual workflow
-  - **Download Updated Speaker Colors JSON** lets you download the speaker colors file, for reupload in step 1 if continuing after the app has gone to sleep 
-  - **Download Updated Quotes TXT** lets you download the updated quotes.txt file, with the “Unknown:” at the start of each line replaced with the attribution given in Step 2. 
-  - In rare circumstances, an error above the HTML may appear saying that not all quotes could be matched. If this has occured, then a button for **Download Unmatched Quotes** will appear, providing index references for the lines in quotes.txt that could not be matched
-  - **Return to Step 2** lets you return to Step 2 to continue attributing dialogue (typically used when moving to step 4 has been done momentarily in order to download the json and txt files for safety)
-    - ***NOTE***: *If you have input ’skip’ on a particular line, returning to Step 2 will not return to the skipped lines. To return to skipped lines, download the files and reinput them in step 1.* 
-  - **Clear Cache for This User** will erase everything you’ve been working on. Clicking this prevents someone else guessing your userkey and using Load Saved Progress to see what you were working on. It is recommended to always click this when you are certain you will not be returning to the app within 12 hours
+- Below the html preview, the download/export options now include:
+  - **Download HTML File**: full highlighted output.
+  - **Download PDF File (takes a while!)**: enabled when PDF dependencies are available in the environment; otherwise shown as unavailable.
+  - **Download Updated Speaker Colors JSON**: save your current colour mapping for re-upload later.
+  - **Download Quotes Records JSON**: canonical Step 2/3 state for Updated, Semi-Automated, and Experimental workflows.
+  - **Download Lines CSV**: line-level export built from DOCX context + quotes records.
+  - **Download Updated Quotes TXT**: available in **Legacy mode only**, for existing quotes.txt continuation workflows.
+  - **Download Unmatched Quotes TXT**: appears only when unmatched lines exist.
+  - **Return to Step 2**: takes you back to continue attribution using your current saved state.
+  - **Clear Cache for This User**: wipes the working cache for the current user key.
+- Practical recommendation:
+  - For non-Legacy workflows, use **Quotes Records JSON + Speaker Colors JSON** as your primary continuation files.
+  - Use **Legacy mode** only if you are actively continuing an existing `quotes.txt` process.
 
 ---
 
 ### Loading Saved Progress
 
-- In Steps 1-4, clicking ‘Load Saved Progress’ at the top of the page will return you to where you previously were
+- In Steps 1-4, clicking ‘Load Saved Progress’ at the top of the page restores the most recently saved encrypted book state for that user key
 - In practice, this is used as follows:
   - Input your userkey in Step 0
-  - When Step 1 appears, click ‘load saved progress’ (do not upload anything as this will wipe your saved progress)
+  - When Step 1 appears, click ‘Load Saved Progress’ (do not upload anything first when using Updated/Semi-Automated/Experimental mode)
+- For non-Legacy modes, no DOCX upload is required for restore; the app restores the encrypted DOCX and associated progress blobs linked to your user key.
+- In Legacy mode, local file-based behaviour still applies.
 - **Note that this will only work if the app has not gone to ‘sleep’, which happens after 12 hours of inactivity from any user**
 
 ---
