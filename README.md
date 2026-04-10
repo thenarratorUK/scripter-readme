@@ -1,166 +1,267 @@
-## README: scripter.streamlit.app
+# Scripter
 
-### Manuscript Markup For Narration
+Scripter is a Streamlit app for marking up narration manuscripts from DOCX files: extracting dialogue, attributing speakers, assigning colours, and exporting a highlighted HTML or PDF-ready version for performance prep.
 
-#### Overview
+Hosted app: [scripter.streamlit.app](https://scripter.streamlit.app)
 
-This web app is designed to mark up a manuscript for narration, as if done so manually with a highlighter (physically or electronically)   
+If your source is a PDF or a DOCX using British/single speech marks, use [quotescript.streamlit.app](https://quotescript.streamlit.app) first to convert it into a suitable DOCX.
 
-It works only with  **Word documents (DOCX)** using international style (double) speech marks. If your manuscript is in PDF or uses British (single) speech marks (DOCX or PDF, the app at [https://quotescript.streamlit.app](https://quotescript.streamlit.app) can be used to convert the document from PDF to DOCX (correcting the quote style if necessary) or can be used to convert a British-styled DOCX to an American styled DOCX  
+## Version Guide
 
-The app allows you to:
+- `v3` in this README means the old legacy-only workflow:
+  DOCX + `quotes.txt`, manual attribution, local file-style continuation, and partial font application.
+- `v4` means the current workflow:
+  multiple processing modes, canonical `quotes_records` JSON for modern paths, encrypted save/restore, richer exports, and the newer UI/data model.
 
-- Attribute each line of dialogue to the correct speaker.
-- Undo a single mistake
-- Assign colours to each speaker for easy reading.
-- Generate a clean, formatted HTML preview of the full script.
-- Save and re-load your progress between sessions.
+Legacy mode still exists in v4 for ongoing `quotes.txt` projects.
 
-WARNING: Streamlit puts apps to sleep if not used for a while. If you expect a break of 12+ hours away from using the app, assume that no-one else will be using the app and download the progress files manually (see Step 4)
+## What v4 Does
 
-This tool is hosted at [**https://scripter.streamlit.app**](https://scripter.streamlit.app) and runs entirely in your browser. No installation or coding knowledge is required.
+- Supports `Book` and `Script` content types.
+- Supports four processing modes:
+  `Updated`, `Semi-Automated`, `Experimental mode`, and `Legacy`.
+- Lets you review unresolved dialogue line by line.
+- Can suggest likely speakers using a local model.
+- Can auto-select very high-confidence suggestions in Experimental mode.
+- Preserves and reapplies speaker colours per book.
+- Generates highlighted HTML, optional PDF, JSON, CSV, and other continuation exports.
+- Stores encrypted non-legacy progress and can restore the latest synced book from the user key alone.
 
----
+## Quick Start
 
-### How to Use
+### Step 0: User Key, Font, Content Type, Mode
 
-#### 1. Step 0: User Verification
+- Enter a user key.
+- Pick a font for both the Streamlit UI and exported HTML.
+- Pick `Book` or `Script`.
+- Pick a mode:
+  - `Updated`: recommended default for fully manual review with current data structures.
+  - `Semi-Automated`: local model suggestions, you confirm the speaker.
+  - `Experimental mode`: same model pipeline, but high-confidence results can be auto-selected.
+  - `Legacy`: for older `quotes.txt` continuation workflows only.
 
-#### Input a ‘User Key'
+### Step 1: Restore or Upload
 
-- Type whatever you would like into this box. It will be prepended to most of the files you download at the end of the process (excluding the speaker colors file) and is required for the load saved progress function to work (only available up to four hours from last use)
-- Do not type something overly simple - if someone else types exactly the same thing, they will be able to access what you are working on. 
-- Choose a **Mode** before continuing. The app now supports:
-  - **Updated** (recommended default): fully manual attribution in Step 2 with context support.
-  - **Semi-Automated**: candidate speakers are suggested by the local model and you confirm/select.
-  - **Legacy**: only use this if you already have an existing `quotes.txt` workflow and are continuing that same process. If you are starting fresh, use **Updated**.
-  - **Experimental mode**: same model pipeline as Semi-Automated, but with high-confidence auto-selection (see below).
+- In non-legacy modes, Step 1 does not auto-load saved progress.
+- To restore a saved book, click `Load Saved Progress`.
+- If you do not want to restore, just upload a DOCX and continue normally.
 
----
+For a new book:
 
-#### 2a. Step 1: Uploading Files (First Time)
+- Upload the DOCX.
+- Optionally upload:
+  - `Quotes Records JSON` in non-legacy modes.
+  - `Quotes TXT` in Legacy mode.
+  - `Speaker Colors JSON`.
 
-#### Upload Your Files
+If you upload only a DOCX:
 
-- The first time you use the app with a specific document, you must go through a one-time process to extract all the dialogue from the document (the ‘quotes.txt’ file)
-- Click **Browse files** or drag your files into the upload boxes.
-- The **DOCX file** is required.
-  - Example: `BookTitle.docx`
-- Once the docx has been uploaded, click ’Start Processing'
-- After a short time (seconds to minutes, depending on the length of the manuscript) you will be given the following options
-  - **Download Extracted Quotes TXT**: Click this to save a copy of the quotes.txt file if you intend to return to the process later and not continue immediately
-  - **Restart:** Click if you are generating quotes.txt files from multiple books in sequence
-  - **Continue:** Click to move to Step 2 (number 3, below)
+- Scripter can extract the dialogue first.
+- You can download the extracted file and continue immediately or return later.
 
-#### 2b. Step 1: Uploading Files (Subsequent Times)
+### Step 2: Attribution
 
-- Click **Browse files** or drag your files into the upload boxes.
+Behaviour depends on mode.
 
-  - The **DOCX file** is required.
-    - Example: `BookTitle.docx`
+- `Updated`
+  - Manual review of unresolved lines with context.
+- `Semi-Automated`
+  - The local model proposes likely speakers.
+  - You can click a suggestion or type a speaker manually.
+- `Experimental mode`
+  - Uses the same suggestion/ranking pipeline as Semi-Automated.
+  - Very high-confidence top candidates can be auto-selected in sequence.
+- `Legacy`
+  - Continues the older `quotes.txt`-based workflow.
 
-- You will also upload:
+Common review actions:
 
-  - **Quotes file:** `userkey-BookTitle-quotes.txt`
-    - Contains dialogue lines in the format `123: Speaker: "Line of text"`
-    - Helps the app recognise which lines belong to which speaker.
-  - **Speaker colours file (optional):** `BookTitle-speaker_colours.json`
-    - Contains a mapping of speaker names to colour codes, e.g.\
-      `{ "Kal": “light grey", "Borgrim": “red" }`
+- Enter a speaker name.
+- `skip` to leave the line unresolved.
+- `undo` to revert the last change.
+- `exit` to move on to colour assignment.
 
----
+Additional v4 review helpers:
 
-#### 3. Step 2 — Process Unknown Speakers
+- frequent-speaker quick buttons
+- console log panel
+- suggestion buttons with confidence display
+- “This is not a name” blocklist for bad candidate names in AI-assisted modes
 
-Step 2 behaviour depends on the selected mode:
+### Step 3: Speaker Colours
 
-- **Updated path**
-  - Any dialogue lines without a recognised speaker are labelled **“Unknown.”**
-  - You review and assign speakers line-by-line.
+- Assign colours to speakers.
+- Only speakers without a chosen colour are shown first.
+- `Edit Speaker Colors` lets you review all colour assignments.
 
-- **Semi-Automated path**
-  - The model proposes likely speakers for each unresolved line.
-  - Warning shown in-app: **“Automatic identification of speakers takes 1-5 seconds per line, please be patient if nothing appears to be happening.”**
-  - You can click a suggestion or enter a speaker manually.
+Special colour behaviours:
 
-- **Experimental mode path (in progress)**
-  - Uses the same candidate generation/ranking as Semi-Automated.
-  - If top confidence is **99.95%+**, the top candidate is automatically selected and the app immediately moves to the next unresolved line.
-  - If subsequent lines are also **99.95%+**, they are auto-attributed in sequence, reducing manual workload by approximately **50%**.
-  - Warning shown in-app: **“Automatic identification and attribution of speakers takes 1-5 seconds per line and if there are multiple automatically attributable speakers in a row, this can add up to minutes. If everything appears to have frozen please wait!”**
+- `None`
+  - no highlight
+  - unresolved text shows in dark red
+- `Do Not Read`
+  - used for text intentionally excluded from narration
+- `Error`
+  - used when detected dialogue should not actually be treated as dialogue
 
-- Any dialogue lines without a recognised speaker are labelled **“Unknown.”** in the quotes.txt file
-- The app guides you line-by-line to correct them.
-- For each “Unknown” line, you can:
-  - Type the correct speaker name (e.g., “Elowen”)
-  - Type or click **skip** to leave it unchanged
-  - Type or click **undo** to revert the last change that wasn’t a skip - this works for a single step only
-  - Type or click **exit** to progress to step 3
-- A panel shows the most frequently used speaker names (these appear once a speaker has been used 10+ times) as quick-access buttons.
-- Your progress is continuously stored in the session’s working JSON cache (`userkey-BookTitle.json`).
+### Step 4: Final Output
 
----
+Step 4 generates the final preview and export set.
 
-#### 4. Step 3 — Assign or Adjust Speaker Colours
+Outputs include:
 
-- Each speaker name is shown alongside a colour box.
-- Only the speakers without a colour selected are displayed
-- As each speaker has a colour associated with it, it will disappear from the page (colours may be preallocated from an uploaded speaker-colors.json file in Step 1). 
-- There are three special colours
-  - None: Does not highlight in step 4, but displays all unattributed dialogue in a dark red. This makes it easier to download the final HTML, print it to PDF, and continue to manually highlight in appropriate software.\*\* This is the default colour for all speakers until changed\*\*
-  - Error: Does not highlight, and reverts text back to black. When the dialogue in Step 2 is incorrectly detected (e.g. it’s a series of italicised words that are\*\* not\*\* internal dialogue) attributing the dialogue to ‘Error’ and then subsequently assigning the colour ‘Error’ to that speaker will mean that the text displays entirely normally in Step 4
-  - Do Not Read: If *Do Not Read* is typed in Step 2, this colour will be automatically attributed, but it can also be selected manually. This will highlight the given text in black and change the text to a dark grey so that it’s still just about readable, but difficult to read. This is used as a reminder to not narrate a particular section if agreed with an author/publisher. 
-- Please note: there are two instances of duplicate colours
-  - Bright Blue and Dark Blue are the same colour. Light Blue and Navy Blue are the two alternative blues
-  - Light Pink and Pale Pink are the same colour
-- You have two additional options on this page:
-  - If you want to edit previously allocated colours, click ‘edit speaker colours’. This will display *all* the names along with their colours, and they will not disappear as they are changed
-  - If you want to move to step 4 (you *can* leave speakers without a colour), click ‘Continue'
+- `Download HTML File`
+- `Download PDF File (takes a while!)` when PDF dependencies are available
+- `Download Updated Speaker Colors JSON`
+- `Download Quotes Records JSON`
+- `Download Lines CSV`
+- `Download Updated Quotes TXT` in Legacy mode only
+- `Download Unmatched Quotes TXT` when needed
 
----
+Other Step 4 actions:
 
-#### 5. Step 4 — Generate and Review HTML Preview
+- `Return to Step 2`
+- `Sync Encrypted Blobs to GitHub`
+- `Clear Cache for This User`
 
-- Step 4 may take some time to load. Once loaded, it will show an HTML file and a number of downloaded boxes. 
-- The HTML shows:
-  - All speaker dialogue with assigned colours used to highlight.
-  - All formatting preserved from the DOCX.
-- You can scroll through the preview in your browser.
-- There are three special sections at the top of the HTML
-  - Character Summary: Displays how many lines each character has, in order of appearance. This can be useful for planning and for the creation of a voice reference
-  - Speaker Ranking: This displays the same information but in the order of how many lines each character has. This is to allow you to prioritise developing individual voices for the most frequent characters. Characters with a single line of dialogue are **excluded**. 
-  - First Substantial Lines: This displays the first line(s) for each character, in order of appearance, for those narrators that like to use the first line in a voice reference. This **includes** characters with a single line of dialogue. 
-- Below the html preview, the download/export options now include:
-  - **Download HTML File**: full highlighted output.
-  - **Download PDF File (takes a while!)**: enabled when PDF dependencies are available in the environment; otherwise shown as unavailable.
-  - **Download Updated Speaker Colors JSON**: save your current colour mapping for re-upload later.
-  - **Download Quotes Records JSON**: canonical Step 2/3 state for Updated, Semi-Automated, and Experimental workflows.
-  - **Download Lines CSV**: line-level export built from DOCX context + quotes records.
-  - **Download Updated Quotes TXT**: available in **Legacy mode only**, for existing quotes.txt continuation workflows.
-  - **Download Unmatched Quotes TXT**: appears only when unmatched lines exist.
-  - **Return to Step 2**: takes you back to continue attribution using your current saved state.
-  - **Clear Cache for This User**: wipes the working cache for the current user key.
-- Practical recommendation:
-  - For non-Legacy workflows, use **Quotes Records JSON + Speaker Colors JSON** as your primary continuation files.
-  - Use **Legacy mode** only if you are actively continuing an existing `quotes.txt` process.
+The final HTML includes:
 
----
+- `Character Summary`
+- `Speaker Ranking`
+- `First Substantial Lines`
+- highlighted manuscript body with original formatting preserved as closely as possible
 
-### Loading Saved Progress
+## Save and Restore
 
-- In Steps 1-4, clicking ‘Load Saved Progress’ at the top of the page restores the most recently saved encrypted book state for that user key
-- In practice, this is used as follows:
-  - Input your userkey in Step 0
-  - When Step 1 appears, click ‘Load Saved Progress’ (do not upload anything first when using Updated/Semi-Automated/Experimental mode)
-- For non-Legacy modes, no DOCX upload is required for restore; the app restores the encrypted DOCX and associated progress blobs linked to your user key.
-- In Legacy mode, local file-based behaviour still applies.
-- **Note that this will only work if the app has not gone to ‘sleep’, which happens after 12 hours of inactivity from any user**
+### Legacy Mode
 
----
+- Uses the older local-file-style continuation flow.
+- Best suited only for existing `quotes.txt` projects.
 
-### Practical Notes
+### Non-Legacy Modes
 
-- Use consistent speaker names throughout (e.g., “Elowen” not “Elowen the Librarian”).
-- All names are normalised. Timmy, timmy, tiMmY and TIMmy will all be stored as Timmy. When multiple words are used, each word is capitalised, e.g. James The Paramedic
-- In the *extremely* rare situation of the app saying no context could be found for the preview in Step 2, click or type exit, progress through to step 4, and download the speaker colors json and quotes txt files. Refresh the page, reinput your userkey, and reupload those two files along with the docx. This will recreate the preview window correctly.
-- When printing the HTML (including to PDF) please ensure the settings allow for printing backgrounds, otherwise the highlights will not appear in the print. 
+Current v4 behaviour is:
+
+- encrypted local-first storage for DOCX, quotes/progress, and colours
+- optional GitHub sync for encrypted blobs
+- automatic restore attempts from the user key
+- manifest-based “latest book” lookup so the app can recover the saved DOCX before restoring progress
+
+In practice:
+
+- enter the user key in Step 0
+- go to Step 1
+- click `Load Saved Progress` if you want the latest synced saved book
+- if not, upload the DOCX once and continue normally
+- after processing, use `Sync Encrypted Blobs to GitHub` in Step 4 so future restore-by-userkey works cleanly
+
+Important note:
+
+- Books saved during the brief v4 transition window when manifests were not being written may need one manual DOCX upload plus one GitHub sync to seed the manifest.
+- After that, later restores can work from the user key again.
+
+## Exports and Continuation Files
+
+Recommended continuation files by workflow:
+
+- non-legacy workflows:
+  `Quotes Records JSON` + `Speaker Colors JSON`
+- legacy workflows:
+  `quotes.txt` + `Speaker Colors JSON`
+
+Additional outputs:
+
+- `Lines CSV` for line-level downstream work
+- `Unmatched Quotes TXT` for review of lines that could not be mapped back into the final HTML
+- HTML and optional PDF for actual narration markup use
+
+## Deployment Notes
+
+- PDF export relies on WeasyPrint and its system dependencies.
+- Encrypted save/restore relies on `age` being available in the runtime.
+- Semi-Automated and Experimental modes rely on the local model files in `models/`.
+- Torch thread limits are now applied outside macOS so VPS/Linux deployments do not oversubscribe CPU threads unnecessarily.
+
+## Changelog: v3 to v4
+
+This is the practical v3 -> v4 change list.
+
+### Workflow Model
+
+- `v3` was effectively one workflow:
+  legacy DOCX + `quotes.txt`.
+- `v4` keeps that as `Legacy` mode but adds three modern modes:
+  `Updated`, `Semi-Automated`, and `Experimental mode`.
+- `v4` adds a `Book` / `Script` content-type selector.
+- `v4` uses `quotes_records` JSON as the canonical state format for non-legacy workflows.
+
+### Save, Restore, and Storage
+
+- Added encrypted non-legacy persistence for:
+  - DOCX
+  - quotes/progress
+  - speaker colours
+- Added local-first encrypted blob storage.
+- Added optional GitHub sync for encrypted blobs.
+- Added restore of the latest saved book from the user key alone.
+- Added manifest-based “active/latest book” lookup so the app can fetch the saved DOCX before restoring quotes and colours.
+- Added book-hash-aware speaker-colour restoration so colours are tied to the correct manuscript.
+- Added more resilient restore paths and diagnostics for corrupt or malformed saved blobs.
+
+### Attribution and Review
+
+- Added `Updated` mode as the modern manual review path.
+- Added `Semi-Automated` mode with local-model speaker suggestions.
+- Added `Experimental mode` with high-confidence auto-selection.
+- Added candidate ranking diagnostics and comparison blocks behind the debug gate.
+- Added frequent-speaker quick buttons.
+- Added “This is not a name” controls to exclude bad candidates from future suggestions.
+- Added more robust undo/skip/exit handling and console logging.
+
+### Context and Matching
+
+- Improved DOCX italic detection and formatting interpretation.
+- Improved dialogue/context matching in Step 2.
+- Added conservative fuzzy fallback for long dialogue when exact matching fails.
+- Improved paragraph JSON caching and restore behaviour.
+- Improved handling of unmatched quotes.
+
+### Outputs
+
+- Added canonical `Quotes Records JSON` export for non-legacy workflows.
+- Added `Lines CSV` export.
+- Added optional PDF export when environment support exists.
+- Kept HTML export and speaker-colour export.
+- Kept `Updated Quotes TXT` as a Legacy-only continuation output.
+
+### Fonts and UI
+
+- Font selection now applies to the whole Streamlit UI as well as exported HTML.
+- Fixed the earlier issue where font changes did not fully apply immediately on the start page.
+- Added better handling for font naming and propagation.
+- Added/cleaned support for:
+  - `Open Dyslexic`
+  - `Gentium Basic`
+  - `Lexend`
+- Improved button styling and general UI consistency.
+
+### Reliability and Operational Changes
+
+- Added a single master debug flag model.
+- Synced the production file with the test file so the only intended difference is:
+  `DEBUG_MODE = False` in production and `DEBUG_MODE = True` in test.
+- Added VPS/Linux-specific torch thread limits while leaving macOS alone.
+- Improved state restoration, cache clearing, and step-to-step transitions.
+
+### Compatibility
+
+- `Legacy` mode still exists for old projects.
+- Existing non-legacy work can now use encrypted restore and GitHub sync.
+- Projects created during the short manifest-less v4 window may need one upload-and-sync pass before userkey-only restore works again.
+
+## Practical Notes
+
+- Use consistent speaker names throughout a project.
+- Names are normalized, so capitalization variants collapse to one speaker label.
+- If you print the final HTML or PDF, ensure background colours are enabled in print settings or the highlights may disappear.
+- If Step 2 context ever looks obviously wrong, export your current files, refresh, and restore or re-upload the current DOCX plus continuation files.
