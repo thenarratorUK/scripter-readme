@@ -1,267 +1,198 @@
 # Scripter
 
-Scripter is a Streamlit app for marking up narration manuscripts from DOCX files: extracting dialogue, attributing speakers, assigning colours, and exporting a highlighted HTML or PDF-ready version for performance prep.
+Scripter helps prepare narration manuscripts. You upload a DOCX, tell Scripter who speaks each line of dialogue, choose highlight colours for the speakers, and download a marked-up HTML or PDF version for recording.
 
-Hosted app: [scripter.streamlit.app](https://scripter.streamlit.app)
+Live app: [scripter.thenarrator.co.uk](https://scripter.thenarrator.co.uk)
 
-If your source is a PDF or a DOCX using British/single speech marks, use [quotescript.streamlit.app](https://quotescript.streamlit.app) first to convert it into a suitable DOCX.
+Changelog: [CHANGELOG.md](CHANGELOG.md)
 
-## Version Guide
+## What You Need
 
-- `v3` in this README means the old legacy-only workflow:
-  DOCX + `quotes.txt`, manual attribution, local file-style continuation, and partial font application.
-- `v4` means the current workflow:
-  multiple processing modes, canonical `quotes_records` JSON for modern paths, encrypted save/restore, richer exports, and the newer UI/data model.
+You need:
 
-Legacy mode still exists in v4 for ongoing `quotes.txt` projects.
+- a DOCX manuscript
+- a user key
+- permission to upload and mark up the document
 
-## What v4 Does
+Optional files:
 
-- Supports `Book` and `Script` content types.
-- Supports four processing modes:
-  `Updated`, `Semi-Automated`, `Experimental mode`, and `Legacy`.
-- Lets you review unresolved dialogue line by line.
-- Can suggest likely speakers using a local model.
-- Can auto-select very high-confidence suggestions in Experimental mode.
-- Preserves and reapplies speaker colours per book.
-- Generates highlighted HTML, optional PDF, JSON, CSV, and other continuation exports.
-- Stores encrypted non-legacy progress and can restore the latest synced book from the user key alone.
+- a `Quotes Records JSON` file, if you are continuing a modern Scripter project from a downloaded progress file
+- a `Speaker Colors JSON` file, if you want to reuse saved speaker colours
+- a `Quotes TXT` file, if you are continuing an older Legacy project
 
-## Quick Start
+If your source is a PDF, convert it to DOCX before using Scripter. The app is built around DOCX input.
 
-### Step 0: User Key, Font, Content Type, Mode
+## User Key
 
-- Enter a user key.
-- Pick a font for both the Streamlit UI and exported HTML.
-- Pick `Book` or `Script`.
-- Pick a mode:
-  - `Updated`: recommended default for fully manual review with current data structures.
-  - `Semi-Automated`: local model suggestions, you confirm the speaker.
-  - `Experimental mode`: same model pipeline, but high-confidence results can be auto-selected.
-  - `Legacy`: for older `quotes.txt` continuation workflows only.
+Your user key is the name Scripter uses to find your saved work. It can be a username, nickname, or passphrase.
 
-### Step 1: Restore or Upload
+Use the same user key when you want to restore progress later. Do not share it with anyone else, because it identifies your working files.
 
-- In non-legacy modes, Step 1 does not auto-load saved progress.
-- To restore a saved book, click `Load Saved Progress`.
-- If you do not want to restore, just upload a DOCX and continue normally.
+## First Page
 
-For a new book:
+On the first page:
 
-- Upload the DOCX.
-- Optionally upload:
-  - `Quotes Records JSON` in non-legacy modes.
-  - `Quotes TXT` in Legacy mode.
-  - `Speaker Colors JSON`.
+1. Read and agree to the terms and conditions.
+2. Choose a font for the app and exported HTML.
+3. Choose whether the document is a `Book` or a `Script`.
+4. Choose a processing mode.
+5. Enter your user key and continue.
 
-If you upload only a DOCX:
+`Book` is for ordinary prose manuscripts where dialogue is mixed into paragraphs.
 
-- Scripter can extract the dialogue first.
-- You can download the extracted file and continue immediately or return later.
+`Script` is for speaker-labelled script material. Script projects normally skip the dialogue-attribution review step and go straight to speaker colours.
 
-### Step 2: Attribution
+## Which Mode Should I Use?
 
-Behaviour depends on mode.
+If you are not sure, use `Updated`.
 
-- `Updated`
-  - Manual review of unresolved lines with context.
-- `Semi-Automated`
-  - The local model proposes likely speakers.
-  - You can click a suggestion or type a speaker manually.
-- `Experimental mode`
-  - Uses the same suggestion/ranking pipeline as Semi-Automated.
-  - Very high-confidence top candidates can be auto-selected in sequence.
-- `Legacy`
-  - Continues the older `quotes.txt`-based workflow.
+### Experimental Mode
 
-Common review actions:
+Experimental mode is the fastest mode when it works well.
 
-- Enter a speaker name.
-- `skip` to leave the line unresolved.
-- `undo` to revert the last change.
-- `exit` to move on to colour assignment.
+It uses the local speaker-suggestion model and can automatically accept very high-confidence speaker matches. It may pause for a few seconds per line while it works, and if several lines are auto-attributed in a row it can look as if nothing is happening for longer than that.
 
-Additional v4 review helpers:
+Use this mode when:
 
-- frequent-speaker quick buttons
-- console log panel
-- suggestion buttons with confidence display
-- “This is not a name” blocklist for bad candidate names in AI-assisted modes
+- you want the most automation
+- the manuscript has fairly clear speaker context
+- you are comfortable checking the results before using the final output
 
-### Step 3: Speaker Colours
+You can still manually correct lines that are not auto-attributed.
 
-- Assign colours to speakers.
-- Only speakers without a chosen colour are shown first.
-- `Edit Speaker Colors` lets you review all colour assignments.
+### Semi-Automated
 
-Special colour behaviours:
+Semi-Automated mode gives suggestions but leaves the decision to you.
 
-- `None`
-  - no highlight
-  - unresolved text shows in dark red
-- `Do Not Read`
-  - used for text intentionally excluded from narration
-- `Error`
-  - used when detected dialogue should not actually be treated as dialogue
+For each unresolved line, Scripter shows likely speakers. You can click a suggestion, type a different name, skip the line, undo the last change, or exit to colour assignment.
 
-### Step 4: Final Output
+Use this mode when:
 
-Step 4 generates the final preview and export set.
+- you want help, but do not want Scripter to auto-select speakers
+- the manuscript has many repeated speakers
+- you want a more cautious workflow than Experimental mode
 
-Outputs include:
+### Updated
+
+Updated mode is the modern manual workflow.
+
+It uses the current `Quotes Records JSON` structure, current save/restore behaviour, and current exports, but it does not use the local model to suggest speakers.
+
+Use this mode when:
+
+- you want maximum manual control
+- the manuscript is unusual or messy
+- you do not want to wait for speaker suggestions
+
+### Legacy
+
+Legacy mode is for old projects that were already using `quotes.txt`.
+
+Do not choose Legacy for a new project unless you specifically need the older `Quotes TXT` workflow.
+
+## Step 1: Restore or Upload
+
+To restore saved work, enter the same user key on the first page, then click `Load Saved Progress`.
+
+To start or continue from files:
+
+1. Upload the DOCX.
+2. Optionally upload a continuation file.
+3. Optionally upload a speaker-colours file.
+4. Click `Start Processing`.
+
+If you upload only a DOCX, Scripter extracts the dialogue first. You can download the extracted continuation file, then either continue immediately or save it for later.
+
+If Scripter finds saved progress for the uploaded DOCX, it asks whether to load that progress or wipe it and start fresh.
+
+## Step 2: Review Dialogue
+
+This step appears for Book projects.
+
+Scripter shows unresolved dialogue one line at a time. For each line, enter the speaker name or use one of the available actions:
+
+- `Submit` saves the name you typed
+- `Skip` leaves the line unresolved
+- `Undo` reverses the last saved attribution
+- `Exit` moves on to speaker colours
+
+In Semi-Automated and Experimental modes, Scripter may also show speaker suggestion buttons.
+
+Frequent-speaker buttons appear once a speaker has been assigned often enough. They are there to make repeated speakers faster to select.
+
+## Step 3: Speaker Colours
+
+Choose a highlight colour for each speaker.
+
+Scripter shows speakers that still need colours first. Use `Edit Speaker Colors` if you want to review or change all speaker colours.
+
+`None` means the speaker will not be highlighted. Unresolved dialogue is shown in dark red so it is easy to spot before recording.
+
+## Step 4: Final Output
+
+Step 4 creates the marked-up output.
+
+The HTML preview includes:
+
+- character summary
+- speaker ranking
+- first substantial lines
+- highlighted manuscript body
+
+Downloads can include:
 
 - `Download HTML File`
-- `Download PDF File (takes a while!)` when PDF dependencies are available
+- `Download PDF File (takes a while!)`
 - `Download Updated Speaker Colors JSON`
 - `Download Quotes Records JSON`
 - `Download Lines CSV`
-- `Download Updated Quotes TXT` in Legacy mode only
-- `Download Unmatched Quotes TXT` when needed
+- `Download Updated Quotes TXT`, in Legacy mode only
+- `Download Unmatched Quotes TXT`, when Scripter could not safely match everything back into the final HTML
 
-Other Step 4 actions:
+If something looks wrong, use `Return to Step 2`, make corrections, then come back to Step 4.
 
-- `Return to Step 2`
-- `Sync Encrypted Blobs to GitHub`
-- `Clear Cache for This User`
+## Save And Restore
 
-The final HTML includes:
+Modern modes save encrypted progress for the DOCX, dialogue records, and speaker colours.
 
-- `Character Summary`
-- `Speaker Ranking`
-- `First Substantial Lines`
-- highlighted manuscript body with original formatting preserved as closely as possible
+For the cleanest restore later:
 
-## Save and Restore
+1. Finish or pause at Step 4.
+2. Click `Sync Encrypted Blobs to GitHub`.
+3. Next time, use the same user key and click `Load Saved Progress`.
 
-### Legacy Mode
+If a project was created during an older transition period, Scripter may need you to upload the DOCX once before it can restore everything automatically. After that, syncing again should make future restores cleaner.
 
-- Uses the older local-file-style continuation flow.
-- Best suited only for existing `quotes.txt` projects.
+Legacy mode uses the older local progress and `quotes.txt` style workflow.
 
-### Non-Legacy Modes
+## If You Get Unmatched Quotes
 
-Current v4 behaviour is:
+`Unmatched Quotes TXT` means Scripter extracted or reviewed dialogue that it could not safely locate in the final HTML.
 
-- encrypted local-first storage for DOCX, quotes/progress, and colours
-- optional GitHub sync for encrypted blobs
-- automatic restore attempts from the user key
-- manifest-based “latest book” lookup so the app can recover the saved DOCX before restoring progress
+Common causes include:
 
-In practice:
+- the DOCX has unusual formatting
+- quotation marks changed during conversion
+- the same line appears more than once in similar contexts
+- the source text was edited after the continuation file was created
 
-- enter the user key in Step 0
-- go to Step 1
-- click `Load Saved Progress` if you want the latest synced saved book
-- if not, upload the DOCX once and continue normally
-- after processing, use `Sync Encrypted Blobs to GitHub` in Step 4 so future restore-by-userkey works cleanly
+Review the unmatched file before relying on the final output.
 
-Important note:
+## Privacy And AI
 
-- Books saved during the brief v4 transition window when manifests were not being written may need one manual DOCX upload plus one GitHub sync to seed the manifest.
-- After that, later restores can work from the user key again.
+The app terms explain the storage and usage position before you upload anything.
 
-## Exports and Continuation Files
+In short:
 
-Recommended continuation files by workflow:
+- uploaded documents and markup may be stored for future internal learning and training
+- stored material is not made accessible outside The Narrator's internal training workflow
+- generative AI is not used while marking up or training
+- by uploading a document, you confirm you have the right to do so
 
-- non-legacy workflows:
-  `Quotes Records JSON` + `Speaker Colors JSON`
-- legacy workflows:
-  `quotes.txt` + `Speaker Colors JSON`
+## Tips
 
-Additional outputs:
-
-- `Lines CSV` for line-level downstream work
-- `Unmatched Quotes TXT` for review of lines that could not be mapped back into the final HTML
-- HTML and optional PDF for actual narration markup use
-
-## Deployment Notes
-
-- PDF export relies on WeasyPrint and its system dependencies.
-- Encrypted save/restore relies on `age` being available in the runtime.
-- Semi-Automated and Experimental modes rely on the local model files in `models/`.
-- Torch thread limits are now applied outside macOS so VPS/Linux deployments do not oversubscribe CPU threads unnecessarily.
-
-## Changelog: v3 to v4
-
-This is the practical v3 -> v4 change list.
-
-### Workflow Model
-
-- `v3` was effectively one workflow:
-  legacy DOCX + `quotes.txt`.
-- `v4` keeps that as `Legacy` mode but adds three modern modes:
-  `Updated`, `Semi-Automated`, and `Experimental mode`.
-- `v4` adds a `Book` / `Script` content-type selector.
-- `v4` uses `quotes_records` JSON as the canonical state format for non-legacy workflows.
-
-### Save, Restore, and Storage
-
-- Added encrypted non-legacy persistence for:
-  - DOCX
-  - quotes/progress
-  - speaker colours
-- Added local-first encrypted blob storage.
-- Added optional GitHub sync for encrypted blobs.
-- Added restore of the latest saved book from the user key alone.
-- Added manifest-based “active/latest book” lookup so the app can fetch the saved DOCX before restoring quotes and colours.
-- Added book-hash-aware speaker-colour restoration so colours are tied to the correct manuscript.
-- Added more resilient restore paths and diagnostics for corrupt or malformed saved blobs.
-
-### Attribution and Review
-
-- Added `Updated` mode as the modern manual review path.
-- Added `Semi-Automated` mode with local-model speaker suggestions.
-- Added `Experimental mode` with high-confidence auto-selection.
-- Added candidate ranking diagnostics and comparison blocks behind the debug gate.
-- Added frequent-speaker quick buttons.
-- Added “This is not a name” controls to exclude bad candidates from future suggestions.
-- Added more robust undo/skip/exit handling and console logging.
-
-### Context and Matching
-
-- Improved DOCX italic detection and formatting interpretation.
-- Improved dialogue/context matching in Step 2.
-- Added conservative fuzzy fallback for long dialogue when exact matching fails.
-- Improved paragraph JSON caching and restore behaviour.
-- Improved handling of unmatched quotes.
-
-### Outputs
-
-- Added canonical `Quotes Records JSON` export for non-legacy workflows.
-- Added `Lines CSV` export.
-- Added optional PDF export when environment support exists.
-- Kept HTML export and speaker-colour export.
-- Kept `Updated Quotes TXT` as a Legacy-only continuation output.
-
-### Fonts and UI
-
-- Font selection now applies to the whole Streamlit UI as well as exported HTML.
-- Fixed the earlier issue where font changes did not fully apply immediately on the start page.
-- Added better handling for font naming and propagation.
-- Added/cleaned support for:
-  - `Open Dyslexic`
-  - `Gentium Basic`
-  - `Lexend`
-- Improved button styling and general UI consistency.
-
-### Reliability and Operational Changes
-
-- Added a single master debug flag model.
-- Synced the production file with the test file so the only intended difference is:
-  `DEBUG_MODE = False` in production and `DEBUG_MODE = True` in test.
-- Added VPS/Linux-specific torch thread limits while leaving macOS alone.
-- Improved state restoration, cache clearing, and step-to-step transitions.
-
-### Compatibility
-
-- `Legacy` mode still exists for old projects.
-- Existing non-legacy work can now use encrypted restore and GitHub sync.
-- Projects created during the short manifest-less v4 window may need one upload-and-sync pass before userkey-only restore works again.
-
-## Practical Notes
-
-- Use consistent speaker names throughout a project.
-- Names are normalized, so capitalization variants collapse to one speaker label.
-- If you print the final HTML or PDF, ensure background colours are enabled in print settings or the highlights may disappear.
-- If Step 2 context ever looks obviously wrong, export your current files, refresh, and restore or re-upload the current DOCX plus continuation files.
+- Use `Updated` for the safest current workflow.
+- Use `Semi-Automated` when you want suggestions but still want to confirm each speaker.
+- Use `Experimental mode` when speed matters and you are happy to check the result carefully.
+- Download `Quotes Records JSON` and `Speaker Colors JSON` from Step 4 if you want portable continuation files.
+- Keep the original DOCX unchanged while working on a project.
