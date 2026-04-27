@@ -2,7 +2,7 @@
 
 This changelog uses hindsight version numbers.
 
-`v3.0` is the last pre-Codex, legacy-only live version. `v4.0` is the first version with the newer mode selection, including Experimental mode. Later numbers group related production changes from the commit history rather than formal releases that existed at the time.
+`v3.0` is the last legacy-only live version. `v4.0` is the first version with the newer mode selection, including Experimental mode. Later numbers group related production changes from the commit history rather than formal releases that existed at the time.
 
 ## v4.33 - Output Fidelity Fixes
 
@@ -22,7 +22,7 @@ Date range: 18 April 2026
 - Counted already assigned speakers correctly when rebuilding frequent-speaker buttons.
 - Fixed duplicate dialogue context matching.
 - Fixed contraction handling in dialogue extraction.
-- Recovered older saved model-source blobs that did not have a manifest.
+- Recovered older saved source blobs that did not have a manifest.
 
 Relevant commits: `0dcd480`, `a93ec85`, `a65c655`, `236e28b`, `2bd32ce`
 
@@ -44,8 +44,8 @@ Date range: 11-13 April 2026
 - Improved persistent progress reload handling.
 - Made the brand header responsive.
 - Updated the Scripter title and entry-point naming.
-- Added support tooling for quotes-records editing and model-source export.
-- Capped some internal review/source exports so they stay manageable.
+- Added support tooling for quotes-records editing and source export.
+- Capped maintenance review/source exports so they stay manageable.
 
 Relevant commits: `310c13b`, `10af3fb`, `57aee77`, `6a9ef5a`, `696b3a9`, `10db2f5`, `da63ad3`, `c960696`, `6f4f1f2`, `815dcc7`
 
@@ -73,7 +73,7 @@ Date range: 10 April 2026
 - Switched modern-mode storage to local-first encrypted blobs.
 - Added GitHub sync for pending encrypted blobs.
 - Restored manual saved-progress loading after an auto-load experiment proved too aggressive.
-- Limited Torch thread usage on Linux/VPS deployments to avoid CPU oversubscription.
+- Limited background thread usage on Linux deployments to avoid CPU oversubscription.
 - Re-hid candidate diagnostics behind the maintainer diagnostics gate.
 
 Relevant commits: `ed39c0e`, `107d53d`, `91348fa`, `81567c2`, `d572ad3`, `f524031`
@@ -121,23 +121,23 @@ Date range: 8 April 2026
 - Constrained context matching to quoted or italic dialogue.
 - Added a conservative fuzzy fallback for long context matching.
 - Improved cascaded italic detection when building context HTML.
-- Fixed logo rendering after Streamlit restarts.
-- Suppressed noisy Streamlit watcher traceback output.
-- Cleaned up dialogue matching in the Streamlit flow.
+- Fixed logo rendering after app restarts.
+- Suppressed noisy watcher traceback output.
+- Cleaned up dialogue matching in the app flow.
 
 Relevant commits: `640fcf9`, `4a0d2a8`, `e51438b`, `d0734bb`, `2f94f3d`, `8ce44a0`
 
-## v4.01 - Semi-Automated Model Improvements
+## v4.01 - Semi-Automated Suggestion Improvements
 
 Date range: 7-8 April 2026
 
-- Added the local speaker-ranking model files.
+- Added speaker-ranking suggestion files.
 - Added Semi-Automated speaker suggestions.
-- Improved candidate generation using nearby context, named-entity information, verb boosts, and stateful candidate pools.
-- Added `NotDialogue` to the model candidate pool.
+- Improved candidate generation using nearby context, verb boosts, and stateful candidate pools.
+- Added `NotDialogue` to the suggestion candidate pool.
 - Improved ranking input formatting and context budgets.
 - Batched and cached ranking work for better speed.
-- Tightened fallback criteria so the model does less unnecessary work.
+- Tightened fallback criteria so suggestions do less unnecessary work.
 - Removed noisy candidate-generation details from the normal public UI.
 
 Relevant commits: `c80e106`, `dbda7fd`, `8dc68ee`, `239317c`, `3e667ee`, `a287a40`, `6bb2547`, `e1105ca`, `a9f76fd`, `5c4739d`, `6ecbd52`, `82a4a64`, `fbfc7ee`, `f2c7013`
@@ -181,7 +181,7 @@ Relevant commits: `5fca485`, `8c7c1e6`
 Date range: 1 April 2026
 
 - Fixed Open Dyslexic font selection propagation.
-- Applied the selected font to Streamlit UI components as well as exported HTML.
+- Applied the selected font to app UI components as well as exported HTML.
 - Added and refined the font preview list.
 - Added the public README link to the app header.
 - Fixed start-page font-selection lag.

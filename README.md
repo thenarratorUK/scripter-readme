@@ -1,198 +1,257 @@
 # Scripter
 
-Scripter helps prepare narration manuscripts. You upload a DOCX, tell Scripter who speaks each line of dialogue, choose highlight colours for the speakers, and download a marked-up HTML or PDF version for recording.
+Scripter helps prepare narration manuscripts. You upload a DOCX, identify who speaks each line of dialogue, choose speaker highlight colours, and download a marked-up file for recording.
 
 Live app: [scripter.thenarrator.co.uk](https://scripter.thenarrator.co.uk)
 
 Changelog: [CHANGELOG.md](CHANGELOG.md)
+
+## Quick Start
+
+1. Open Scripter.
+2. Read and accept the terms.
+3. Choose the app font.
+4. Choose `Book` or `Script`.
+5. Choose a processing mode. If you are unsure, choose `Updated`.
+6. Enter your user key.
+7. Upload your DOCX.
+8. Work through the speaker review if Scripter asks you to.
+9. Choose speaker colours.
+10. Download the finished HTML or PDF.
+11. Download the progress files before you close the page.
 
 ## What You Need
 
 You need:
 
 - a DOCX manuscript
-- a user key
+- a user key you will remember
 - permission to upload and mark up the document
 
 Optional files:
 
-- a `Quotes Records JSON` file, if you are continuing a modern Scripter project from a downloaded progress file
-- a `Speaker Colors JSON` file, if you want to reuse saved speaker colours
-- a `Quotes TXT` file, if you are continuing an older Legacy project
+- `Quotes Records JSON`, for continuing a modern Scripter project
+- `Speaker Colors JSON`, for reusing saved speaker colours
+- `Quotes TXT`, for continuing an older Legacy project
 
-If your source is a PDF, convert it to DOCX before using Scripter. The app is built around DOCX input.
+If your source is a PDF, convert it to DOCX first. Scripter is built around DOCX input.
 
 ## User Key
 
-Your user key is the name Scripter uses to find your saved work. It can be a username, nickname, or passphrase.
+Your user key is how Scripter finds your saved work. It can be a name, nickname, project code, or passphrase.
 
-Use the same user key when you want to restore progress later. Do not share it with anyone else, because it identifies your working files.
+Use the same user key when you want to restore progress later. Do not share it casually, because it identifies your saved projects.
 
-## First Page
+If you forget the key, Scripter cannot reliably know which saved work belongs to you.
 
-On the first page:
+## Book Or Script
 
-1. Read and agree to the terms and conditions.
-2. Choose a font for the app and exported HTML.
-3. Choose whether the document is a `Book` or a `Script`.
-4. Choose a processing mode.
-5. Enter your user key and continue.
+Choose `Book` for ordinary prose manuscripts where dialogue is mixed into paragraphs.
 
-`Book` is for ordinary prose manuscripts where dialogue is mixed into paragraphs.
+Choose `Script` for speaker-labelled script material.
 
-`Script` is for speaker-labelled script material. Script projects normally skip the dialogue-attribution review step and go straight to speaker colours.
+Book projects usually include a dialogue review step. Script projects normally skip most of that review and go more directly to speaker colours.
 
 ## Which Mode Should I Use?
 
 If you are not sure, use `Updated`.
 
-### Experimental Mode
+### Updated
 
-Experimental mode is the fastest mode when it works well.
+`Updated` is the safest current workflow.
 
-It uses the local speaker-suggestion model and can automatically accept very high-confidence speaker matches. It may pause for a few seconds per line while it works, and if several lines are auto-attributed in a row it can look as if nothing is happening for longer than that.
+Use it when:
 
-Use this mode when:
-
-- you want the most automation
-- the manuscript has fairly clear speaker context
-- you are comfortable checking the results before using the final output
-
-You can still manually correct lines that are not auto-attributed.
+- you want full manual control
+- the manuscript is unusual or messy
+- you do not want speaker suggestions
+- accuracy matters more than speed
 
 ### Semi-Automated
 
-Semi-Automated mode gives suggestions but leaves the decision to you.
+`Semi-Automated` shows speaker suggestions, but you still make the choice.
 
-For each unresolved line, Scripter shows likely speakers. You can click a suggestion, type a different name, skip the line, undo the last change, or exit to colour assignment.
+Use it when:
 
-Use this mode when:
+- the book has repeated speakers
+- you want help moving faster
+- you still want to confirm each speaker yourself
 
-- you want help, but do not want Scripter to auto-select speakers
-- the manuscript has many repeated speakers
-- you want a more cautious workflow than Experimental mode
+You can click a suggestion, type a different speaker, skip the line, undo the last change, or move on to colours.
 
-### Updated
+### Experimental Mode
 
-Updated mode is the modern manual workflow.
+`Experimental mode` is the fastest option when it works well.
 
-It uses the current `Quotes Records JSON` structure, current save/restore behaviour, and current exports, but it does not use the local model to suggest speakers.
+It can accept very confident speaker matches automatically and pause on lines that still need review.
 
-Use this mode when:
+Use it when:
 
-- you want maximum manual control
-- the manuscript is unusual or messy
-- you do not want to wait for speaker suggestions
+- you want the quickest route through a clear manuscript
+- you are willing to check the final results carefully
+- the speaker context is fairly obvious
+
+If it pauses or seems slow, give it a moment. It may be working through several lines.
 
 ### Legacy
 
-Legacy mode is for old projects that were already using `quotes.txt`.
+`Legacy` is only for older projects that already use a `quotes.txt` workflow.
 
-Do not choose Legacy for a new project unless you specifically need the older `Quotes TXT` workflow.
+Do not choose Legacy for a new project unless you specifically need that older file format.
 
-## Step 1: Restore or Upload
+## Step 1: Restore Or Upload
 
-To restore saved work, enter the same user key on the first page, then click `Load Saved Progress`.
+You have two ways to continue work.
+
+To restore saved work:
+
+1. Enter the same user key as before.
+2. Click `Load Saved Progress`.
+3. If Scripter asks for the DOCX as well, upload the same source DOCX you used before.
 
 To start or continue from files:
 
 1. Upload the DOCX.
-2. Optionally upload a continuation file.
-3. Optionally upload a speaker-colours file.
-4. Click `Start Processing`.
+2. Optionally upload a `Quotes Records JSON` file.
+3. Optionally upload a `Speaker Colors JSON` file.
+4. For Legacy projects only, optionally upload a `Quotes TXT` file.
+5. Click `Start Processing`.
 
-If you upload only a DOCX, Scripter extracts the dialogue first. You can download the extracted continuation file, then either continue immediately or save it for later.
+If Scripter finds saved progress for the uploaded DOCX, it may ask whether to load that progress or wipe it and start fresh. Choose carefully. Wiping is for when you deliberately want to restart that project.
 
-If Scripter finds saved progress for the uploaded DOCX, it asks whether to load that progress or wipe it and start fresh.
+## Extracted Dialogue Files
+
+When you upload a fresh DOCX, Scripter extracts the dialogue.
+
+Download the extracted records if the app offers them. They are useful continuation files if you need to pause, move device, or recover later.
+
+For modern projects, the important continuation file is:
+
+```text
+Quotes Records JSON
+```
+
+For older Legacy projects, the continuation file is:
+
+```text
+Quotes TXT
+```
 
 ## Step 2: Review Dialogue
 
 This step appears for Book projects.
 
-Scripter shows unresolved dialogue one line at a time. For each line, enter the speaker name or use one of the available actions:
+Scripter shows one unresolved line at a time. Your job is to tell it who is speaking.
 
-- `Submit` saves the name you typed
-- `Skip` leaves the line unresolved
-- `Undo` reverses the last saved attribution
-- `Exit` moves on to speaker colours
+For each line, you can:
 
-In Semi-Automated and Experimental modes, Scripter may also show speaker suggestion buttons.
+- type a speaker name and submit it
+- choose a suggested speaker, if suggestions are available
+- skip the line for now
+- undo the last saved change
+- move on to speaker colours
 
-Frequent-speaker buttons appear once a speaker has been assigned often enough. They are there to make repeated speakers faster to select.
+Speaker names should be consistent. `John`, `JOHN`, and `Jon` may be treated as different speakers, so pick one form and stick to it.
+
+Frequent-speaker buttons appear after a speaker has been used enough times. They are there to save typing.
+
+If you are unsure about a line, skip it rather than guessing. Unresolved dialogue is easier to spot later than a confident wrong label.
 
 ## Step 3: Speaker Colours
 
 Choose a highlight colour for each speaker.
 
-Scripter shows speakers that still need colours first. Use `Edit Speaker Colors` if you want to review or change all speaker colours.
+Scripter shows speakers that still need colours first. Use `Edit Speaker Colors` if you want to review or change all colours.
 
-`None` means the speaker will not be highlighted. Unresolved dialogue is shown in dark red so it is easy to spot before recording.
+`None` means that speaker will not be highlighted.
+
+Unresolved dialogue is shown in dark red so you can find it before recording.
+
+Before continuing, check:
+
+- major speakers have distinct colours
+- minor speakers are still readable
+- unresolved lines are either deliberately unresolved or fixed
 
 ## Step 4: Final Output
 
 Step 4 creates the marked-up output.
 
-The HTML preview includes:
+The preview can include:
 
-- character summary
+- a character summary
 - speaker ranking
 - first substantial lines
 - highlighted manuscript body
 
-Downloads can include:
+Download the files you need before closing the page.
+
+Common downloads:
 
 - `Download HTML File`
 - `Download PDF File (takes a while!)`
 - `Download Updated Speaker Colors JSON`
 - `Download Quotes Records JSON`
 - `Download Lines CSV`
+- `Download Unmatched Quotes TXT`, if anything could not be safely matched
 - `Download Updated Quotes TXT`, in Legacy mode only
-- `Download Unmatched Quotes TXT`, when Scripter could not safely match everything back into the final HTML
 
-If something looks wrong, use `Return to Step 2`, make corrections, then come back to Step 4.
+If something looks wrong, use `Return to Step 2`, fix the issue, then come back to Step 4 and download again.
 
 ## Save And Restore
 
-Modern modes save encrypted progress for the DOCX, dialogue records, and speaker colours.
+For the cleanest pause-and-return workflow:
 
-For the cleanest restore later:
+1. Reach Step 4 if you can.
+2. Download `Quotes Records JSON`.
+3. Download `Speaker Colors JSON`.
+4. Download the HTML or PDF output if it is usable.
+5. Click `Sync Encrypted Blobs to GitHub` if that button is available.
+6. Next time, use the same user key and click `Load Saved Progress`.
 
-1. Finish or pause at Step 4.
-2. Click `Sync Encrypted Blobs to GitHub`.
-3. Next time, use the same user key and click `Load Saved Progress`.
+If restore does not find everything automatically, upload the original DOCX and the saved JSON files manually.
 
-If a project was created during an older transition period, Scripter may need you to upload the DOCX once before it can restore everything automatically. After that, syncing again should make future restores cleaner.
+Keep the original DOCX unchanged while you are working. If the source text changes after you create continuation files, matching may become less reliable.
 
-Legacy mode uses the older local progress and `quotes.txt` style workflow.
+## Unmatched Quotes
 
-## If You Get Unmatched Quotes
+`Unmatched Quotes TXT` means Scripter reviewed or extracted dialogue that it could not safely place back into the final marked-up output.
 
-`Unmatched Quotes TXT` means Scripter extracted or reviewed dialogue that it could not safely locate in the final HTML.
-
-Common causes include:
+Common reasons:
 
 - the DOCX has unusual formatting
 - quotation marks changed during conversion
-- the same line appears more than once in similar contexts
-- the source text was edited after the continuation file was created
+- the same line appears more than once
+- the source DOCX was edited after the continuation file was created
+- a line is split strangely across paragraphs or styles
 
-Review the unmatched file before relying on the final output.
+Do not ignore the unmatched file. Open it, check the listed lines, and decide whether the final output is still safe to use.
 
-## Privacy And AI
+## Safe Working Habit
 
-The app terms explain the storage and usage position before you upload anything.
+1. Keep the original DOCX.
+2. Use `Updated` unless you have a reason to choose another mode.
+3. Save progress files from Step 4.
+4. Check the final HTML or PDF before recording.
+5. Keep the progress JSON files with the project until the recording is finished.
 
-In short:
+## If Something Goes Wrong
 
-- uploaded documents and markup may be stored for future internal learning and training
-- stored material is not made accessible outside The Narrator's internal training workflow
-- generative AI is not used while marking up or training
-- by uploading a document, you confirm you have the right to do so
+- If restore does not work, use the same user key and upload the original DOCX again.
+- If colours look wrong, return to the colour step and download fresh colour JSON afterwards.
+- If the wrong speaker appears repeatedly, undo where possible or correct the speaker name before final output.
+- If many quotes are unmatched, check whether the DOCX changed after the continuation file was made.
+- If the PDF takes a while, wait before clicking again. Large manuscripts can be slow to export.
+- If the PDF fails, download the HTML file first so you still have a marked-up output.
 
-## Tips
+## Privacy And Upload Rights
 
-- Use `Updated` for the safest current workflow.
-- Use `Semi-Automated` when you want suggestions but still want to confirm each speaker.
-- Use `Experimental mode` when speed matters and you are happy to check the result carefully.
-- Download `Quotes Records JSON` and `Speaker Colors JSON` from Step 4 if you want portable continuation files.
-- Keep the original DOCX unchanged while working on a project.
+The app terms explain storage and usage before you upload anything.
+
+Only upload documents you have the right to process. Do not upload someone else's manuscript unless you have permission.
+
+During the Scripter workflow, generative AI is not used to write, rewrite, or mark up your manuscript. You stay in charge of speaker names, colours, and the final check.
+
+## What Scripter Is Not
+
+Scripter prepares a marked-up narration manuscript. It does not replace a human check of speaker names, context, formatting, or final recording notes.
