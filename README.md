@@ -34,7 +34,7 @@ Optional files:
 - `Speaker Colors JSON`, for reusing saved speaker colours
 - `Quotes TXT`, for continuing an older Legacy project
 
-If your source is a PDF, convert it to DOCX first. Scripter is built around DOCX input.
+If your source is a PDF, use [Converter](https://apps.thenarrator.co.uk/converter) to create a DOCX first. Scripter is built around DOCX input.
 
 ## User Key
 
